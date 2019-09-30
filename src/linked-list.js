@@ -21,6 +21,7 @@ class LinkedList {
         }
         this.length++;
         return this;
+
     }
 
     head() {
@@ -48,10 +49,16 @@ class LinkedList {
             current = current.next;
             counter++;
         }
-        const nodeBefore = current.prev;
-        const insertNode = new Node(data, nodeBefore, current);
-        nodeBefore.next = insertNode;
-        current.prev = insertNode;
+        if (!(this.length)) {
+            this.append(new Node(data));
+        } else {
+            const nodeBefore = current.prev;
+            const insertNode = new Node(data, nodeBefore, current);
+            nodeBefore.next = insertNode;
+            current.prev = insertNode;
+        }
+
+        this.length++;
         return this;
     }
 
@@ -63,6 +70,7 @@ class LinkedList {
         this._tail = new Node();
         this._head = this._tail;
         this.length = 0;
+        return this;
     }
 
     deleteAt(index) {
@@ -73,8 +81,23 @@ class LinkedList {
             counter++;
         }
         const [nodeBefore, nodeAfter] = [current.prev, current.next];
-        nodeBefore.next = nodeAfter;
-        nodeAfter.prev = nodeBefore;
+        current.data = 0;
+        if (index === 0) {
+            if (nodeAfter) {
+                nodeAfter.prev = null;
+                this._head = nodeAfter;
+            }
+        } else if (index === this.length - 1) {
+            if (nodeBefore) {
+                nodeBefore.next = null;
+                this._tail = nodeBefore;
+            }
+
+        } else {
+            nodeBefore.next = nodeAfter;
+            nodeAfter.prev = nodeBefore;
+        }
+        this.length--;
         return this;
     }
 
@@ -91,6 +114,7 @@ class LinkedList {
         }
 
         [this._head, this._tail] = [this._tail, this._head];
+        return this;
     }
 
     indexOf(data) {
